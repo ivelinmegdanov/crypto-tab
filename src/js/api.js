@@ -1,56 +1,58 @@
 window.App = window.App || {};
 
 class API {
-    constructor(apiAdapter) {
-        this.apiAdapter = apiAdapter;
-    }
+  constructor(apiAdapter) {
+    this.apiAdapter = apiAdapter;
+  }
 
-    get(_endpoint) {
-        App.Loader.init();
+  get(_endpoint) {
+    App.Loader.init();
 
-        return axios.get(this.apiAdapter.baseURL + _endpoint)
-            .then( r => r.data )
-            .then (r => {
-                App.Message.clear();
-                App.Loader.destroy();
+    return axios
+      .get(this.apiAdapter.baseURL + _endpoint)
+      .then((r) => r.data)
+      .then((r) => {
+        App.Message.clear();
+        App.Loader.destroy();
 
-                return r;
-            });
-    }
+        return r;
+      });
+  }
 
-    mapData(_r, _period) {
-        return this.apiAdapter.mapData(_r, _period);
-    }
+  mapData(_r, _period) {
+    return this.apiAdapter.mapData(_r, _period);
+  }
 
-    getBitcoinRatesForAll() {
-        return this.apiAdapter.getBitcoinRatesForAll();
-    }
+  getRatesForAll() {
+    return this.apiAdapter.getRatesForAll();
+  }
 
-    getBitcoinRatesForOneYear() {
-        return this.apiAdapter.getBitcoinRatesForOneYear();
-    }
+  getRatesForOneYear() {
+    return this.apiAdapter.getRatesForOneYear();
+  }
 
-    getBitcoinRatesForOneMonth() {
-        return this.apiAdapter.getBitcoinRatesForOneMonth();
-    }
+  getRatesForOneMonth() {
+    return this.apiAdapter.getRatesForOneMonth();
+  }
 
-    getBitcoinRatesForOneWeek() {
-        return this.apiAdapter.getBitcoinRatesForOneWeek();
-    }
+  getRatesForOneWeek() {
+    return this.apiAdapter.getRatesForOneWeek();
+  }
 
-    getBitcoinRatesForOneDay() {
-        return this.apiAdapter.getBitcoinRatesForOneDay();
-    }
+  getRatesForOneDay() {
+    return this.apiAdapter.getRatesForOneDay();
+  }
 
-    getBitcoinRatesForOneHour() {
-        return this.apiAdapter.getBitcoinRatesForOneHour();
-    }
+  getRatesForOneHour() {
+    return this.apiAdapter.getRatesForOneHour();
+  }
 
-    getBitcoinRatesNow() {
-        return this.apiAdapter.getBitcoinRatesNow();
-    }
-};
+  getRatesNow() {
+    return this.apiAdapter.getRatesNow();
+  }
+}
 
 // window.App.API = new API(App.apiFakeAdapter);
-//window.App.API = new API(App.apiGoranAdapter);
-window.App.API = new API(App.apiCecoAdapter);
+// window.App.API = new API(App.apiGoranAdapter);
+// window.App.API = new API(App.apiCecoAdapter);
+window.App.API = new API(App.apiBoyoAdapter);
