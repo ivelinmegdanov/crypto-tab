@@ -21,7 +21,6 @@ window.App.Crypto = {
     chart: null,
 
     $dataPeriods: document.querySelectorAll('.js-period'),
-    $cryptoToggle: document.querySelectorAll('input[name="crypto"]'),
     $cryptoTypeLabel: document.getElementById('crypto-type'),
     currentCrypto: '',
 
@@ -46,33 +45,12 @@ window.App.Crypto = {
             });
         });
 
-        [...self.$cryptoToggle].forEach((el) => {
-            el.addEventListener('change', function () {
-                if (this.checked) {
-                    self.currentCrypto = this.value;
-                    self.updateCryptoTypeLabel(self.currentCrypto);
-                    const period = document.querySelector('.js-period.active').dataset.period;
-                    self.getCryptoData(period, self.currentCrypto)
-                        .then((_data) => self.chart.init(_data))
-                        .catch((error) => {
-                            self.handleChartRejection(period, self.currentCrypto, error);
-                        });
 
-                    App.Settings.set('cryptoType', self.currentCrypto);
-
-                    self.setPriceChange(self.currentCrypto);
-                    self.setLastUpdated();
-                    self.displayPriceNow();
-                }
-            });
-        });
 
         App.Settings.get().then(({ period, cryptoType }) => {
-            self.currentCrypto =
-                cryptoType || document.querySelector('input[name="crypto"]:checked').value;
+            self.currentCrypto = cryptoType || 'bitcoin';
             const selectedTab = period ? Object.keys(this.PERIODS).indexOf(period) : 1;
-            document.querySelector(`input[name="crypto"][value="${self.currentCrypto}"]`).checked =
-                true;
+            self.updateCryptoTypeLabel(self.currentCrypto);
             self.initRepositories();
             self.$dataPeriods[selectedTab].click();
         });
@@ -81,6 +59,23 @@ window.App.Crypto = {
     updateCryptoTypeLabel(cryptoType) {
         const label = cryptoType.charAt(0).toUpperCase() + cryptoType.slice(1);
         this.$cryptoTypeLabel.textContent = label;
+    },
+
+    changeCryptoType(cryptoType) {
+        this.currentCrypto = cryptoType;
+        this.updateCryptoTypeLabel(cryptoType);
+        const period = document.querySelector('.js-period.active').dataset.period;
+        this.getCryptoData(period, cryptoType)
+            .then((_data) => this.chart.init(_data))
+            .catch((error) => {
+                this.handleChartRejection(period, cryptoType, error);
+            });
+
+        App.Settings.set('cryptoType', cryptoType);
+
+        this.setPriceChange(cryptoType);
+        this.setLastUpdated();
+        this.displayPriceNow();
     },
 
     getCryptoData(period, cryptoType) {
@@ -320,8 +315,7 @@ window.App.Crypto = {
         this.initEvents();
 
         App.Settings.get().then(({ cryptoType }) => {
-            this.currentCrypto =
-                cryptoType || document.querySelector('input[name="crypto"]:checked').value;
+            this.currentCrypto = cryptoType || 'bitcoin';
             this.updateCryptoTypeLabel(this.currentCrypto);
             this.displayPriceNow();
         });

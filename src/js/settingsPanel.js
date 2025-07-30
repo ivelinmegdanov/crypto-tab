@@ -26,7 +26,12 @@ window.App.SettingsPanel = (function () {
         });
 
         document.getElementById('token-select').addEventListener('change', (e) => {
-            window.App.Settings.set('token', e.target.value);
+            const cryptoType = e.target.value;
+            window.App.Settings.set('cryptoType', cryptoType);
+
+            if (window.App.Crypto && window.App.Crypto.changeCryptoType) {
+                window.App.Crypto.changeCryptoType(cryptoType);
+            }
         });
 
         document.getElementById('clock-format').addEventListener('change', (e) => {
@@ -152,10 +157,8 @@ window.App.SettingsPanel = (function () {
         updateBorderColor('border-up', upColor);
         updateBorderColor('border-down', downColor);
 
-        const token = settings.token;
-        if (token) {
-            document.getElementById('token-select').value = token;
-        }
+        const cryptoType = settings.cryptoType || 'bitcoin';
+        document.getElementById('token-select').value = cryptoType;
 
         const clockFormat = settings.clockFormat;
         if (clockFormat) {

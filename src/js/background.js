@@ -15,7 +15,7 @@ async function fetchCryptoPrice(period, cryptoType) {
     };
 
     try {
-        const response = await fetch(`http://localhost:3000/v1/${endpoints[period]}`); // TODO: Update to use the deployed API (maybe use a config file to store the base URL)
+        const response = await fetch(`https://api.crypto-tab.com/v1/${endpoints[period]}`);
         const data = await response.json();
         cryptoPriceData[cryptoType][period] = data;
     } catch (error) {
