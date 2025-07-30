@@ -131,7 +131,6 @@ window.App.Crypto = {
     },
     handleNowRejection() {
         this.isLocalNowDataOld = true;
-        App.Loader.destroy();
     },
 
     repositories: {},

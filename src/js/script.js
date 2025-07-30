@@ -7,6 +7,4 @@ window.onload = () => {
     [...document.querySelectorAll(`[data-platform="${platform}"]`)].forEach((el) => {
         el.classList.remove('hidden');
     });
-
-    window.App.Loader.displayPage();
 };
