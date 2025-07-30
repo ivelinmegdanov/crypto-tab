@@ -63,6 +63,7 @@ window.App.Crypto = {
 
     changeCryptoType(cryptoType) {
         this.currentCrypto = cryptoType;
+        this.initRepositories();
         this.updateCryptoTypeLabel(cryptoType);
         const period = document.querySelector('.js-period.active').dataset.period;
         this.getCryptoData(period, cryptoType)
@@ -133,9 +134,11 @@ window.App.Crypto = {
         const storageSetting =
             App.ENV.platform === 'EXTENSION' ? 'BROWSER_STORAGE' : 'LOCAL_STORAGE';
 
-        ['bitcoin', 'ethereum'].forEach((cryptoType) => {
-            this.repositories[cryptoType] = {};
-            Object.keys(this.PERIODS).forEach((period) => {
+        const cryptoType = this.currentCrypto || 'bitcoin';
+        if (!this.repositories[cryptoType]) this.repositories[cryptoType] = {};
+
+        Object.keys(this.PERIODS).forEach((period) => {
+            if (!this.repositories[cryptoType][period]) {
                 this.repositories[cryptoType][period] = new SuperRepo({
                     storage: storageSetting,
                     name: `${cryptoType}-${period}`,
@@ -151,8 +154,10 @@ window.App.Crypto = {
                                 this.handleChartRejection(period, cryptoType, jqXHR);
                             }),
                 });
-            });
+            }
+        });
 
+        if (!this.repositories[cryptoType]['NOW']) {
             this.repositories[cryptoType]['NOW'] = new SuperRepo({
                 storage: storageSetting,
                 name: `${cryptoType}-NOW`,
@@ -176,7 +181,7 @@ window.App.Crypto = {
                             this.handleNowRejection();
                         }),
             });
-        });
+        }
     },
 
     getCryptoDataFromBackground(period, cryptoType) {
@@ -201,6 +206,7 @@ window.App.Crypto = {
 
     $change: document.querySelector('#change'),
     async setPriceChange(cryptoType) {
+        if (!this.repositories[cryptoType]) this.initRepositories();
         let { localData } = await this.repositories[cryptoType]['NOW'].getDataUpToDateStatus();
         if (!localData) {
             return;
@@ -267,6 +273,7 @@ window.App.Crypto = {
     $lastUpdated: document.querySelector('#last-updated'),
     setLastUpdated() {
         const cryptoType = this.currentCrypto;
+        if (!this.repositories[cryptoType]) this.initRepositories();
         this.repositories[cryptoType]['NOW'].getDataUpToDateStatus().then((info) => {
             const prettyLastUpdatedTime = dayjs(info.lastFetched).fromNow();
 
