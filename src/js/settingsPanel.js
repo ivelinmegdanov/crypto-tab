@@ -9,11 +9,28 @@ window.App.SettingsPanel = (function () {
     const DEFAULT_UP_COLOR = '#61ca00';
     const DEFAULT_DOWN_COLOR = '#ff4949';
 
+    function populateTokenDropdown() {
+        const tokenSelect = document.getElementById('token-select');
+
+        tokenSelect.innerHTML = '';
+
+        const tokens = window.App.CryptoTokens.getAllTokens();
+
+        tokens.forEach((token) => {
+            const option = document.createElement('option');
+            option.value = token.id;
+            option.textContent = token.displayName;
+            tokenSelect.appendChild(option);
+        });
+    }
+
     function init() {
         settingsPanel = document.getElementById('settings-panel');
         toggleButton = document.getElementById('toggle-settings');
         themeToggle = document.getElementById('theme-toggle');
         themeOptions = document.querySelectorAll('.toggle-option');
+
+        populateTokenDropdown();
 
         toggleButton.addEventListener('click', togglePanelVisibility);
 
@@ -157,7 +174,7 @@ window.App.SettingsPanel = (function () {
         updateBorderColor('border-up', upColor);
         updateBorderColor('border-down', downColor);
 
-        const cryptoType = settings.cryptoType || 'bitcoin';
+        const cryptoType = settings.cryptoType || window.App.CryptoTokens.getDefaultToken();
         document.getElementById('token-select').value = cryptoType;
 
         const clockFormat = settings.clockFormat;

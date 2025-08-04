@@ -48,7 +48,7 @@ window.App.Crypto = {
 
 
         App.Settings.get().then(({ period, cryptoType }) => {
-            self.currentCrypto = cryptoType || 'bitcoin';
+            self.currentCrypto = cryptoType || window.App.CryptoTokens.getDefaultToken();
             const selectedTab = period ? Object.keys(this.PERIODS).indexOf(period) : 1;
             self.updateCryptoTypeLabel(self.currentCrypto);
             self.initRepositories();
@@ -57,8 +57,8 @@ window.App.Crypto = {
     },
 
     updateCryptoTypeLabel(cryptoType) {
-        const label = cryptoType.charAt(0).toUpperCase() + cryptoType.slice(1);
-        this.$cryptoTypeLabel.textContent = label;
+        const displayName = window.App.CryptoTokens.getDisplayName(cryptoType);
+        this.$cryptoTypeLabel.textContent = displayName;
     },
 
     changeCryptoType(cryptoType) {
@@ -134,7 +134,7 @@ window.App.Crypto = {
         const storageSetting =
             App.ENV.platform === 'EXTENSION' ? 'BROWSER_STORAGE' : 'LOCAL_STORAGE';
 
-        const cryptoType = this.currentCrypto || 'bitcoin';
+        const cryptoType = this.currentCrypto || window.App.CryptoTokens.getDefaultToken();
         if (!this.repositories[cryptoType]) this.repositories[cryptoType] = {};
 
         Object.keys(this.PERIODS).forEach((period) => {

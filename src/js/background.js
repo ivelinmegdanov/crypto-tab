@@ -1,9 +1,14 @@
-let cryptoPriceData = {
-    bitcoin: {},
-    ethereum: {},
-};
+let cryptoPriceData = {};
+
+function initCryptoDataForToken(cryptoType) {
+    if (!cryptoPriceData[cryptoType]) {
+        cryptoPriceData[cryptoType] = {};
+    }
+}
 
 async function fetchCryptoPrice(period, cryptoType) {
+    initCryptoDataForToken(cryptoType);
+    
     const endpoints = {
         ALL: `${cryptoType}/all`,
         ONE_YEAR: `${cryptoType}/year`,
