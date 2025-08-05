@@ -6,11 +6,19 @@ window.App.CryptoTokens = {
     TOKENS: {
         bitcoin: {
             id: 'bitcoin',
-            displayName: 'Bitcoin'
+            displayName: 'Bitcoin',
         },
         ethereum: {
             id: 'ethereum',
-            displayName: 'Ethereum'
+            displayName: 'Ethereum',
+        },
+        hedera: {
+            id: 'hedera',
+            displayName: 'Hedera',
+        },
+        wallet: {
+            id: 'wallet',
+            displayName: 'Ambire Wallet',
         },
     },
 
@@ -33,5 +41,5 @@ window.App.CryptoTokens = {
     // Get the default token ID
     getDefaultToken() {
         return 'bitcoin';
-    }
+    },
 };
