@@ -229,7 +229,7 @@ window.App.Crypto = {
 
     $priceNow: document.querySelector('#price-now'),
     setPriceNow(_price) {
-        this.$priceNow.textContent = App.Utils.formatPrice(Math.round(_price));
+        this.$priceNow.textContent = App.Utils.formatPrice(_price);
     },
 
     $change: document.querySelector('#change'),
