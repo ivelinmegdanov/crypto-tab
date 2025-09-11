@@ -1,13 +1,23 @@
 window.App.apiBoyoAdapter = {
     mapData: function (response, dateLabelFormat) {
+        if (!response || !Array.isArray(response)) {
+            return [];
+        }
+
         return response
-            .map((_rec) => ({
-                value: _rec.value,
-                timestamp: dayjs
-                    .utc(_rec.timestamp * 1000)
-                    .local()
-                    .format(dateLabelFormat),
-            }))
+            .map((_rec) => {
+                const rawTs = _rec.timestamp !== undefined ? _rec.timestamp : _rec.time; // fallback
+                if (!rawTs) return null;
+
+                const timestampMs = rawTs < 1e12 ? rawTs * 1000 : rawTs;
+                const formatted = dayjs.utc(timestampMs).local().format(dateLabelFormat);
+
+                return {
+                    value: _rec.value !== undefined ? _rec.value : _rec.average,
+                    timestamp: formatted,
+                };
+            })
+            .filter(Boolean)
             .reverse();
     },
 
